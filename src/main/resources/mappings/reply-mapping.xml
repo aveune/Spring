@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reply-mapping">
+
+	
+	<select id="replyDelete" >
+	 <![CDATA[    
+	   delete from reply
+	    where rno = #{rno}
+	 ]]>
+	</select>
+	
+	
+	
+	<insert id="insert"  >
+	<selectKey keyProperty="rno" resultType="int" order="BEFORE">
+		select rnoplus.nextval from dual
+	</selectKey>
+	 <![CDATA[    
+	   insert  into  reply(bno ,rno , id , rcontent , replydate ) 
+	   values( #{bno} ,#{rno} , #{id} , #{rcontent} , #{replydate})
+	 ]]>
+	</insert>
+		
+	
+	
+	<select id="getreplyList" resultType="ReplyVo" >
+	<![CDATA[    
+  	 select * from reply where bno = #{bno}
+	 
+	 ]]>
+
+	</select>
+	
+	
+	<select id="content"  resultType="ReplyVo" parameterType="ReplyVo">
+	 <![CDATA[    
+	   select  *  from  reply where rno = #{rno}
+	 ]]>
+	</select>
+	
+	<select id="update" resultType="ReplyVo">
+	 <![CDATA[    
+	   update reply 
+	   set rcontent= #{rcontent} , replydate= #{replydate}
+	   where rno = #{rno}
+	 ]]>
+	</select>
+	
+
+</mapper>

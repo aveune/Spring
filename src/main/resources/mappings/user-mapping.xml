@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user-mapping">
+
+	
+	
+	<select id="delete" resultType="UserVo" >
+	 <![CDATA[    
+	   delete from userTable where custno = #{custno}
+	 ]]>
+	</select>
+	
+	
+	<select id="Alldelete" resultType="UserVo" >
+	 <![CDATA[    
+	   delete from userTable where id = #{id}
+	 ]]>
+	</select>
+	
+	<insert id="insert"  >
+	 <![CDATA[    
+	   insert  into  userTable(custno ,id , pwd , tel , email, address, joindate ) 
+	   values( #{custno} ,#{id} , #{pwd} , #{tel} , #{email}, #{address}, #{joindate})
+	 ]]>
+	</insert>
+		
+		<select id="tc" resultType="int" >
+	 <![CDATA[    
+	   select  count(*) as tc  from  userTable
+	   where 1=1
+	 ]]>
+	   <if test="ch1 == 'id'">
+			    <![CDATA[  
+			      and id like '%' || #{ch2} || '%' 
+			    ]]>
+			    </if>
+			    
+			    <if test="ch1 == 'custno'">
+			    <![CDATA[  
+			      and custno like '%' || #{ch2} || '%' 
+			    ]]>
+			    </if>
+	 
+	 
+	</select>
+		
+	<select id="custno" resultType="int" >
+	 <![CDATA[    
+	   select  max(custno) + 1 as custno  from  userTable
+	 ]]>
+	</select>
+	
+	
+	<select id="getuserList" resultType="UserVo" >
+	<![CDATA[    
+  	 select *
+	 from 
+		( select rownum as rnum, custno, id, tel, email, address,joindate	
+			from ( select * from userTable where 1=1
+			  ]]> 
+			   
+			    <if test="ch1 == 'id'">
+			    <![CDATA[  
+			      and id like '%' || #{ch2} || '%' 
+			    ]]>
+			    </if>
+			    
+			    <if test="ch1 == 'custno'">
+			    <![CDATA[  
+			      and custno like '%' || #{ch2} || '%' 
+			    ]]>
+			    </if>
+			
+			  <![CDATA[    
+			  order by custno ) 									
+		 	where rownum <= #{startIdx}+9 )
+		  where rnum >= #{startIdx} 
+	 ]]>
+	</select>
+	
+	<select id="login" resultType="UserVo" >
+	 <![CDATA[    
+	   select  id, pwd  from  userTable where id = #{id} and pwd = #{pwd}
+	 ]]>
+	</select>
+	
+	
+	<select id="content" resultType="UserVo" >
+	 <![CDATA[    
+	   select  *  from  userTable where custno = #{custno}
+	 ]]>
+	</select>
+	
+	<select id="update"  >
+	 <![CDATA[    
+	   update userTable set tel= #{tel} ,email= #{email},address= #{address} , joindate=#{joindate}
+	   where custno = #{custno}
+	 ]]>
+	</select>
+	
+	<select id="idChk"  resultType="int" >
+	 <![CDATA[    
+	   select  count(*)  from  userTable where id = #{userId}
+	 ]]>
+	</select>
+
+</mapper>

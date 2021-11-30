@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board-mapping">
+
+	
+	<select id="boardDelete" >
+	 <![CDATA[    
+	   delete from boardTable
+	    where bno = #{bno}
+	 ]]>
+	</select>
+	
+	
+	<select id="userDelete" >
+	 <![CDATA[    
+	   delete from boardTable
+	    where id = #{id}
+	 ]]>
+	</select>
+	
+	
+	
+	<insert id="insert"  >
+	 <![CDATA[    
+	   insert  into  boardTable(bno ,id , title , content , regdate ) 
+	   values( #{bno} ,#{id} , #{title} , #{content} , #{regdate})
+	 ]]>
+	</insert>
+		
+	<select id="tc" resultType="int" >
+	 <![CDATA[    
+	   select  count(*) as tc  from  boardTable
+	   where 1=1
+	 ]]>
+	  <if test="ch1 == 'id'">
+			    <![CDATA[  
+			      and id like '%' || #{ch2} || '%' 
+			    ]]>
+			    </if>
+			    
+			    <if test="ch1 == 'title'">
+			    <![CDATA[  
+			      and title like '%' || #{ch2} || '%' 
+			    ]]>
+			    </if>
+	 
+	 
+	 
+	</select>
+		
+	<select id="bno" resultType="int" >
+	 <![CDATA[    
+	   select  max(bno) + 1 as bno  from  boardTable
+	 ]]>
+	</select>
+	
+	
+	<select id="cnt" >
+	 <![CDATA[    
+	   update  boardTable set cnt = cnt+ 1 
+	   where bno = #{bno}
+	 ]]>
+	</select>
+	
+	
+	<select id="getboardList" resultType="BoardVo" >
+	<![CDATA[    
+  	 select rownum ,K.*
+	 from 
+		( select rownum as rnum, bno, id, title, content, regdate,cnt	
+			from ( select * from boardTable where 1=1
+			  ]]> 
+			   
+			    <if test="ch1 == 'id'">
+			    <![CDATA[  
+			      and id like '%' || #{ch2} || '%' 
+			    ]]>
+			    </if>
+			    
+			    <if test="ch1 == 'title'">
+			    <![CDATA[  
+			      and title like '%' || #{ch2} || '%' 
+			    ]]>
+			    </if>
+			
+			  <![CDATA[    
+			  order by bno desc) K								
+		 	where rownum <= #{startIdx}+9 ) K
+		  where rnum >= #{startIdx} 
+	 ]]>
+
+	</select>
+	
+	
+	<select id="content" resultType="BoardVo" >
+	 <![CDATA[    
+	   select  *  from  boardTable where bno = #{bno}
+	 ]]>
+	</select>
+	
+	<select id="update" resultType="BoardVo" >
+	 <![CDATA[    
+	   update boardTable 
+	   set title= #{title} , content= #{content} , regdate= #{regdate}
+	   where bno = #{bno} and id = #{id}
+	 ]]>
+	</select>
+	
+
+</mapper>
